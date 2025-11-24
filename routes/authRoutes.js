@@ -1,0 +1,18 @@
+// routes/auth.routes.js
+import express from "express";
+import { register, login, profile, updateProfile, changePassword } from "../controllers/authController.js";
+import { authenticate } from "../middlewares/authMiddleware.js";
+
+const router = express.Router();
+
+// -------------------- PUBLIC ROUTES --------------------
+router.post("/register", register);
+router.post("/login", login);
+
+// -------------------- PROTECTED ROUTES --------------------
+// All routes below require valid JWT
+router.get("/profile", authenticate, profile);
+router.put("/profile", authenticate, updateProfile);
+router.put("/change-password", authenticate, changePassword);
+
+export default router;
