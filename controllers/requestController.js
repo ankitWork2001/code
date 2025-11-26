@@ -1,7 +1,6 @@
 import Request from "../models/Request.js";
 import Service from "../models/Service.js";
 import User from "../models/User.js";
-import { createNotification } from "../utils/createNotification.js";
 
 // --------------------------------------------------
 // CREATE NEW REQUEST
@@ -37,15 +36,6 @@ export const createRequest = async (req, res) => {
     });
 
     await request.save();
-
-    //create notificatio
-    await createNotification(
-          userId,
-          "Request Sent To Admin",
-          "In-App",
-          "Your request has been created successfully."
-        );
-
 
     return res.status(201).json({
       success: true,

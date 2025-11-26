@@ -48,6 +48,10 @@ const serviceSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    countries: {
+      type: [String], // e.g., ["USA", "Canada", "Germany"]
+      default: [],
+    },
     isActive: {
       type: Boolean,
       default: true,

@@ -14,6 +14,7 @@ const signToken = (payload) =>
 
 // ---------------- REGISTER ----------------
 export const register = async (req, res) => {
+  console.log("Registration attempt:", req.body);
   try {
     const { firstName, lastName, email, password, phone, role } = req.body;
 
@@ -23,6 +24,13 @@ export const register = async (req, res) => {
         message:
           "Email, Password, First Name, Last Name, and Phone are required",
       });
+
+    if(password.length < 6) {
+      return res.status(400).json({
+        success: false,
+        message: "Password must be at least 6 characters long",
+      });
+    }
 
     const exists = await User.findOne({ email });
     if (exists)
@@ -65,6 +73,7 @@ export const register = async (req, res) => {
       },
     });
   } catch (err) {
+    console.error("Registration error:", err);
     res
       .status(500)
       .json({ success: false, message: "Server Error", error: err.message });
@@ -85,11 +94,11 @@ export const login = async (req, res, next) => {
       $or: [{ email: username }, { phone: username }],
     });
     if (!user)
-      return res.status(401).json({ success: false, message: "Invalid login" });
+      return res.status(401).json({ success: false, message: "User Not Exist" });
 
     const match = await user.comparePassword(password);
     if (!match)
-      return res.status(401).json({ success: false, message: "Invalid login" });
+      return res.status(401).json({ success: false, message: "Invalid password" });
 
     const token = signToken({ id: user._id, role: user.role });
 

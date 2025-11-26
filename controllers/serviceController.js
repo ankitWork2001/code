@@ -1,15 +1,16 @@
 import Service from "../models/Service.js";
-import { createNotification } from "../utils/createNotification.js";
 
 // Create a new service
 export const createService = async (req, res) => {
   try {
     const {
       name,
+      imageURL,
       description,
       requiredDocuments,
       estimatedProcessingDays,
       formFields,
+      countries,
     } = req.body;
 
     console.log("Creating service with data:", req.body);
@@ -64,16 +65,11 @@ export const createService = async (req, res) => {
       requiredDocuments: requiredDocuments || [],
       estimatedProcessingDays: estimatedProcessingDays || 0,
       formFields: formFields || [],
+      imageURL: imageURL || "",
+      countries: countries || [],
     });
 
     const savedService = await newService.save();
-
-    await createNotification(
-          req.userId,
-          "Service Created",
-          "In-App",
-          "A new service has been created successfully."
-        );
 
     return res.status(201).json({
       success: true,
@@ -129,13 +125,6 @@ export const updateService = async (req, res) => {
         .status(404)
         .json({ success: false, message: "Service not found" });
     }
-
-    await createNotification(
-          req.userId,
-          "Service Updated",
-          "In-App",
-          "A service has been updated successfully."
-        );
 
     res.status(200).json({ success: true, data: updatedService });
   } catch (error) {
