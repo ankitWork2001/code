@@ -1,4 +1,4 @@
-// controllers/auth.controller.js
+
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 import { logAudit } from "../utils/auditLogger.js";
