@@ -5,8 +5,6 @@ export const authenticate = async (req, res, next) => {
   try {
     const authHeader = req.headers.authorization || req.headers.Authorization;
 
-    console.log("Auth Header:", authHeader);
-
     if (!authHeader?.startsWith("Bearer ")) {
       return res
         .status(401)
@@ -29,8 +27,6 @@ export const authenticate = async (req, res, next) => {
 
     next();
   } catch (err) {
-    console.error("Authentication error:", err.message);
-
     if (err.name === "JsonWebTokenError") {
       return res.status(401).json({ error: "Unauthorized - Invalid token" });
     }
@@ -58,7 +54,6 @@ export const isAdmin = async (req, res, next) => {
 
     next();
   } catch (err) {
-    console.error("Admin check error:", err.message);
     res.status(500).json({ error: "Authorization check failed" });
   }
 };

@@ -11,7 +11,6 @@ const DocumentSchema = new mongoose.Schema(
     url: { type: String, required: true },
     provider: { type: String }, // "cloudinary" | "s3"
     publicId: String,
-    uploadedBy: { type: mongoose.Types.ObjectId, ref: "User" },
     uploadedAt: { type: Date, default: Date.now },
   },
   { _id: true }

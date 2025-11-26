@@ -19,14 +19,13 @@ const RequestSchema = new mongoose.Schema(
     status: {
       type: String,
       enum: [
-        "draft",
         "pending",
         "processing",
         "completed",
         "rejected",
         "cancelled",
       ],
-      default: "draft",
+      default: "pending",
       index: true,
     },
 
@@ -37,15 +36,15 @@ const RequestSchema = new mongoose.Schema(
     },
 
     // history of status changes & admin comments
-    history: [
-      {
-        fromStatus: String,
-        toStatus: String,
-        changedBy: { type: mongoose.Types.ObjectId, ref: "User" },
-        comment: String,
-        at: { type: Date, default: Date.now },
-      },
-    ],
+    // history: [
+    //   {
+    //     fromStatus: String,
+    //     toStatus: String,
+    //     changedBy: { type: mongoose.Types.ObjectId, ref: "User" },
+    //     comment: String,
+    //     at: { type: Date, default: Date.now },
+    //   },
+    // ],
 
     // final files generated (ticket PDF, visa copy etc.)
     outputs: [

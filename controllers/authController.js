@@ -1,4 +1,4 @@
-
+// controllers/auth.controller.js
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 import { logAudit } from "../utils/auditLogger.js";
@@ -14,7 +14,6 @@ const signToken = (payload) =>
 
 // ---------------- REGISTER ----------------
 export const register = async (req, res) => {
-  console.log("Registration attempt:", req.body);
   try {
     const { firstName, lastName, email, password, phone, role } = req.body;
 
@@ -73,7 +72,6 @@ export const register = async (req, res) => {
       },
     });
   } catch (err) {
-    console.error("Registration error:", err);
     res
       .status(500)
       .json({ success: false, message: "Server Error", error: err.message });
@@ -159,6 +157,13 @@ export const changePassword = async (req, res, next) => {
     await user.save();
 
     await logAudit(user._id, "change_password", "User", user._id);
+
+    await createNotification(
+      user._id,
+      "Password Changed",
+      "In-App",
+      "Your password has been updated successfully."
+    );
 
     res.json({ success: true, message: "Password updated successfully" });
   } catch (err) {
