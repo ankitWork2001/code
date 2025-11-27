@@ -11,6 +11,19 @@ export const createRequest = async (req, res) => {
     const userId = req.userId; // from auth middleware
     const { serviceId, formData, documents } = req.body;
 
+    const existingRequest = await Request.findOne({
+      user: userId,
+      service: serviceId,
+      status: { $in: ["pending", "processing"] },
+    });
+
+    if (existingRequest) {
+      return res.status(400).json({
+        success: false,
+        message: "You already applied for this service.",
+      });
+    }
+
     // Validate service
     const serviceExists = await Service.findById(serviceId);
     if (!serviceExists) {
@@ -56,7 +69,7 @@ export const getRequestById = async (req, res) => {
 
     const requests = await Request.find({
       user: userId,
-    }).populate("service", "name description")
+    }).populate("service", "name description").sort({ createdAt: -1 })
       .lean();
 
     if (requests.length === 0) {

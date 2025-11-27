@@ -95,7 +95,7 @@ export const createService = async (req, res) => {
 // Get all active services
 export const getAllServices = async (req, res) => {
   try {
-    const services = await Service.find();
+    const services = await Service.find().sort({ createdAt: -1 });
     res.status(200).json({ success: true, data: services });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
