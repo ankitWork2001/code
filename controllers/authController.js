@@ -141,7 +141,7 @@ export const updateProfile = async (req, res, next) => {
 };
 
 // ---------------- CHANGE PASSWORD ----------------
-export const changePassword = async (req, res) => {
+export const changePassword = async (req, res, next) => {
   try {
     const { oldPassword, newPassword } = req.body;
 
@@ -167,6 +167,6 @@ export const changePassword = async (req, res) => {
 
     res.json({ success: true, message: "Password updated successfully" });
   } catch (err) {
-    res.status(500).json({ success: false, message: err.message });
+    next(err);
   }
 };
