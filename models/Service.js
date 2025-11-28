@@ -54,7 +54,7 @@ const serviceSchema = new mongoose.Schema(
     },
 
     // add air ticket company name
-    airLines: {
+    airlines: {
       type: [String],
       default: [], // eg: ["Delta", "American Airlines"]
     },
