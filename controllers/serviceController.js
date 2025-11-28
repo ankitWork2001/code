@@ -13,7 +13,7 @@ export const createService = async (req, res) => {
       estimatedProcessingDays,
       formFields,
       countries,
-      airLines,
+      airlines,
     } = req.body;
 
     // Basic Validation
@@ -68,7 +68,7 @@ export const createService = async (req, res) => {
       formFields: formFields || [],
       imageURL: imageURL || "",
       countries: countries || [],
-      airLines: airLines || [],
+      airlines: airlines || [],
     });
 
     const savedService = await newService.save();
