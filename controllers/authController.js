@@ -50,7 +50,7 @@ export const register = async (req, res) => {
     await createNotification(
       user._id,
       "Welcome!",
-      "In-App",
+      "success",
       "Your account has been created successfully."
     );
 
@@ -161,7 +161,7 @@ export const changePassword = async (req, res, next) => {
     await createNotification(
       user._id,
       "Password Changed",
-      "In-App",
+      "info",
       "Your password has been updated successfully."
     );
 

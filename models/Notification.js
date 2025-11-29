@@ -18,8 +18,8 @@ const notificationSchema = new Schema({
   },
   type: {
     type: String,
-    enum: ['In-App', 'Email', 'WhatsApp'],
-    default: 'In-App',
+    enum: ['info', 'success', 'warning', 'error'],
+    default: 'info',
   },
   isRead: {
     type: Boolean,
@@ -33,5 +33,4 @@ const notificationSchema = new Schema({
   timestamps: true,
 });
 
-const Notification = mongoose.model('Notification', notificationSchema);
-export default Notification;
+export default mongoose.model('Notification', notificationSchema);

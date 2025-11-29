@@ -45,7 +45,7 @@ export const createRequest = async (req, res) => {
     await createNotification(
           userId,
           "Request Created",
-          "In-App",
+          "success",
           `Your request for ${serviceExists.name} has been created successfully.`
         );
 
@@ -64,7 +64,6 @@ export const createRequest = async (req, res) => {
 // --------------------------------------------------
 export const getRequestById = async (req, res) => {
   try {
-    console.log("User ID from auth middleware:", req.userId);
     const userId = req.userId; // logged-in user
 
     const requests = await Request.find({
@@ -79,7 +78,6 @@ export const getRequestById = async (req, res) => {
       });
     }
 
-    console.log("Fetched Request:", requests);
     return res.status(200).json({
       success: true,
       data: requests,
@@ -155,7 +153,7 @@ export const updateRequestStatus = async (req, res) => {
     await createNotification(
            request.user,
           "Request Status Updated",
-          "In-App",
+          "info",
           `Your request status has been updated to ${newStatus}.`
         );
 

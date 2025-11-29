@@ -76,7 +76,7 @@ export const createService = async (req, res) => {
     await createNotification(
           userId,
           "Service Created",
-          "In-App",
+          "info",
           "A new service has been created successfully."
         );
 
@@ -178,7 +178,7 @@ export const toggleServiceStatus = async (req, res) => {
     await createNotification(
           userId,
           "Service Status Changed",
-          "In-App",
+          "info",
           `Service has been ${service.isActive ? "activated" : "deactivated"}.`
         );
 

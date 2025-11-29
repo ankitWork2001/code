@@ -9,6 +9,7 @@ import authRoutes from "./routes/authRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import serviceRoutes from "./routes/serviceRoutes.js";
 import requestRoutes from "./routes//requestRoutes.js";
+import notificationRoutes from "./routes/notificationRoutes.js";
 
 const app = express();
 const PORT = process.env.PORT;
@@ -37,6 +38,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/services", serviceRoutes);
 app.use("/api/requests", requestRoutes);
+app.use("/api/notifications", notificationRoutes);
 
 app.use((req, res, next) => {
   res.status(404).json({ message: "Route not found" });
