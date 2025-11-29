@@ -12,7 +12,7 @@ router.post("/login", login);
 // -------------------- PROTECTED ROUTES --------------------
 // All routes below require valid JWT
 router.get("/profile", authenticate, profile);
-router.put("/profile", authenticate, updateProfile);
+router.put("/update-profile", authenticate, updateProfile);
 router.put("/change-password", authenticate, changePassword);
 
 export default router;
