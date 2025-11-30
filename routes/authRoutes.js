@@ -1,6 +1,6 @@
 // routes/auth.routes.js
 import express from "express";
-import { register, login, profile, updateProfile, changePassword } from "../controllers/authController.js";
+import { register, login, profile, updateProfile, changePassword, forgotPassword, resetPassword } from "../controllers/authController.js";
 import { authenticate } from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
@@ -14,5 +14,8 @@ router.post("/login", login);
 router.get("/profile", authenticate, profile);
 router.put("/update-profile", authenticate, updateProfile);
 router.put("/change-password", authenticate, changePassword);
+
+router.post("/forgot-password", forgotPassword);
+router.post("/reset-password", resetPassword);
 
 export default router;

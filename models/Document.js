@@ -2,18 +2,39 @@ import mongoose from "mongoose";
 
 const DocumentSchema = new mongoose.Schema(
   {
-    type: {
+      filename: {
       type: String,
-      enum: ["passport", "photo", "ticket", "mofa", "other"],
-      default: "other",
+      required: true,
     },
-    filename: String,
-    url: { type: String, required: true },
-    provider: { type: String }, // "cloudinary" | "s3"
-    publicId: String,
-    uploadedAt: { type: Date, default: Date.now },
+    mimeType: {
+      type: String, // e.g., "application/pdf", "image/jpeg"
+      required: true,
+    },
+    url: {
+      type: String,
+      required: true,
+    },
+
+    provider: {
+      type: String,
+      enum: ["cloudinary", "s3"],
+      default: "cloudinary",
+    },
+
+    publicId: {
+      type: String,
+      required: true,
+    },
+
+    uploadedAt: {
+      type: Date,
+      default: Date.now,
+    },
   },
-  { _id: true }
+  {
+    _id: true,
+    timestamps: true, // optional: adds createdAt & updatedAt automatically
+  }
 );
 
 export default DocumentSchema;

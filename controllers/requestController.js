@@ -10,6 +10,7 @@ export const createRequest = async (req, res) => {
   try {
     const userId = req.userId; // from auth middleware
     const { serviceId, formData, documents } = req.body;
+    console.log("Create Request Body:", req.body);
 
     const existingRequest = await Request.findOne({
       user: userId,
@@ -49,12 +50,15 @@ export const createRequest = async (req, res) => {
           `Your request for ${serviceExists.name} has been created successfully.`
         );
 
+        console.log("Created Request:", request);
+
     return res.status(201).json({
       success: true,
       message: "Request created successfully",
       data: request,
     });
   } catch (error) {
+    console.log("Create Request Error:", error);
     res.status(500).json({ success: false, message: "Server error" });
   }
 };
@@ -77,6 +81,8 @@ export const getRequestById = async (req, res) => {
         message: "No pending requests found",
       });
     }
+
+    console.log("Fetched Requests:", requests);
 
     return res.status(200).json({
       success: true,

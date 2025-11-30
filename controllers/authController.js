@@ -170,3 +170,97 @@ export const changePassword = async (req, res, next) => {
     next(err);
   }
 };
+
+export const forgotPassword = async (req, res, next) => {
+  try {
+    const { email } = req.body;
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User with this email not found",
+      });
+    }
+
+    // Generate OTP
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+    user.passwordResetOTP = otp;
+    user.passwordResetOTPExpires = Date.now() + 15 * 60 * 1000; // 15 minutes
+    await user.save();
+
+    // Try sending email — but DO NOT stop process if it fails
+    try {
+      await sendEmail({
+        to: email,
+        subject: "Password Reset OTP",
+        html: `<p>Your OTP for password reset is: <b>${otp}</b>. It is valid for 15 minutes.</p>`,
+      });
+    } catch (err) {
+      console.log("⚠ Email sending failed — ignoring and returning OTP in response");
+    }
+
+    await logAudit(user._id, "forgot_password", "User", user._id);
+
+    // Always return OTP — no emailSent flag
+    return res.json({
+      success: true,
+      email: user.email,
+      otp,
+      message: "OTP generated successfully",
+    });
+
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const resetPassword = async (req, res, next) => {
+  try {
+    const { email, otp, newPassword } = req.body;
+
+    const user = await User.findOne({ email });
+    if (!user)
+      return res.status(404).json({
+        success: false,
+        message: "User with this email not found",
+      });
+
+    // Check OTP
+    if (
+      user.passwordResetOTP !== otp ||
+      Date.now() > user.passwordResetOTPExpires
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid or expired OTP",
+      });
+    }
+
+    // Update password (pre-save hook will hash)
+    user.password = newPassword;
+
+    // Clear OTP
+    user.passwordResetOTP = undefined;
+    user.passwordResetOTPExpires = undefined;
+
+    await user.save();
+
+    await logAudit(user._id, "reset_password", "User", user._id);
+
+    await createNotification(
+      user._id,
+      "Password Reset",
+      "info",
+      "Your password has been reset successfully."
+    );
+
+    return res.json({
+      success: true,
+      message: "Password reset successfully",
+    });
+  } catch (err) {
+    next(err);
+  }
+};
