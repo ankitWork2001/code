@@ -188,19 +188,19 @@ export const forgotPassword = async (req, res, next) => {
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
     user.passwordResetOTP = otp;
-    user.passwordResetOTPExpires = Date.now() + 15 * 60 * 1000; // 15 minutes
+    user.passwordResetOTPExpires = Date.now() + 5 * 60 * 1000; // 5 minutes
     await user.save();
 
     // Try sending email — but DO NOT stop process if it fails
-    try {
-      await sendEmail({
-        to: email,
-        subject: "Password Reset OTP",
-        html: `<p>Your OTP for password reset is: <b>${otp}</b>. It is valid for 15 minutes.</p>`,
-      });
-    } catch (err) {
-      console.log("⚠ Email sending failed — ignoring and returning OTP in response");
-    }
+    // try {
+    //   await sendEmail({
+    //     to: email,
+    //     subject: "Password Reset OTP",
+    //     html: `<p>Your OTP for password reset is: <b>${otp}</b>. It is valid for 15 minutes.</p>`,
+    //   });
+    // } catch (err) {
+    //   console.log("⚠ Email sending failed — ignoring and returning OTP in response");
+    // }
 
     await logAudit(user._id, "forgot_password", "User", user._id);
 
