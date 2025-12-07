@@ -10,6 +10,11 @@ const RequestSchema = new mongoose.Schema(
       index: true,
     },
     service: { type: mongoose.Types.ObjectId, ref: "Service", required: true },
+    subService: {
+      type: mongoose.Types.ObjectId,
+      required: true,
+    },
+
     // dynamic form fields saved here (passport number, dates...), keep flexible
     formData: { type: mongoose.Schema.Types.Mixed, default: {} },
 
@@ -29,29 +34,15 @@ const RequestSchema = new mongoose.Schema(
       index: true,
     },
 
-    priority: {
-      type: String,
-      enum: ["low", "medium", "high"],
-      default: "medium",
-    },
-
-    // history of status changes & admin comments
-    // history: [
-    //   {
-    //     fromStatus: String,
-    //     toStatus: String,
-    //     changedBy: { type: mongoose.Types.ObjectId, ref: "User" },
-    //     comment: String,
-    //     at: { type: Date, default: Date.now },
-    //   },
-    // ],
-
     // final files generated (ticket PDF, visa copy etc.)
     outputs: [
       {
-        label: String,
+        fileName: String,
+        mimeType: String,
         url: String,
-        uploadedAt: Date,
+        provider: { type: String, enum: ["cloudinary", "s3"], default: "cloudinary" },
+        publicId: String,
+        uploadedAt: { type: Date, default: Date.now },
         uploadedBy: { type: mongoose.Types.ObjectId, ref: "User" },
       },
     ],

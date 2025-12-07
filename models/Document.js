@@ -14,7 +14,6 @@ const DocumentSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-
     provider: {
       type: String,
       enum: ["cloudinary", "s3"],

@@ -9,21 +9,22 @@ import { createNotification } from "../utils/createNotification.js";
 export const createRequest = async (req, res) => {
   try {
     const userId = req.userId; // from auth middleware
-    const { serviceId, formData, documents } = req.body;
+    const { serviceId, subServiceId, formData, documents } = req.body;
     console.log("Create Request Body:", req.body);
 
-    const existingRequest = await Request.findOne({
-      user: userId,
-      service: serviceId,
-      status: { $in: ["pending", "processing"] },
-    });
+    // const existingRequest = await Request.findOne({
+    //   user: userId,
+    //   service: serviceId,
+    //   subService: subServiceId,
+    //   status: { $in: ["pending", "processing"] },
+    // });
 
-    if (existingRequest) {
-      return res.status(400).json({
-        success: false,
-        message: "You already applied for this service.",
-      });
-    }
+    // if (existingRequest) {
+    //   return res.status(400).json({
+    //     success: false,
+    //     message: "You already applied for this service.",
+    //   });
+    // }
 
     // Validate service
     const serviceExists = await Service.findById(serviceId);
@@ -34,9 +35,18 @@ export const createRequest = async (req, res) => {
       });
     }
 
+       const subService = serviceExists.subServices.id(subServiceId);
+if (!subService) {
+  return res.status(404).json({
+    success: false,
+    message: "Selected sub-service not found",
+  });
+}
+
     const request = new Request({
       user: userId,
       service: serviceId,
+      subService: subServiceId,
       formData: formData || {},
       documents: documents || [],
     });

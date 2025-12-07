@@ -172,6 +172,7 @@ export const changePassword = async (req, res, next) => {
 };
 
 export const forgotPassword = async (req, res, next) => {
+  console.log("Forgot password request received");
   try {
     const { email } = req.body;
 

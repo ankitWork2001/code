@@ -1,5 +1,36 @@
 import mongoose from "mongoose";
 
+
+const subServiceSchema = new mongoose.Schema({
+  // Name of the sub-service, e.g., "USA" or "UK"
+  name: {
+    type: String,
+    required: [true, "Sub-Service name is required"],
+    trim: true,
+  },
+  // Sub-Service-specific dynamic form fields
+  formFields: {
+    type: [
+      {
+        label: { type: String, required: true }, // shown on UI
+        name: { type: String, required: true }, // key in formData
+        type: {
+          type: String,
+          enum: ["text", "number", "date", "select", "file"],
+          required: true,
+        },
+        required: { type: Boolean, default: false },
+        options: { type: [String], default: [] }, // for select only
+      },
+    ],
+    default: [],
+  },
+  isActive: {
+    type: Boolean,
+    default: true,
+  },
+});
+
 const serviceSchema = new mongoose.Schema(
   {
     name: {
@@ -17,23 +48,10 @@ const serviceSchema = new mongoose.Schema(
       required: [true, "Service description is required"],
     },
 
-    formFields: {
-      type: [
-        {
-          label: { type: String, required: true }, // shown on UI
-          name: { type: String, required: true }, // key in formData
-          type: {
-            type: String,
-            enum: ["text", "number", "date", "select", "file"],
-            required: true,
-          },
-          required: { type: Boolean, default: false },
-          options: { type: [String], default: [] }, // for select only
-        },
-      ],
+    subServices: {
+      type: [subServiceSchema],
       default: [],
     },
-
     // List of document names the user needs to upload
     requiredDocuments: {
       type: [String],
@@ -48,16 +66,12 @@ const serviceSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
-    countries: {
-      type: [String], // e.g., ["USA", "Canada", "Germany"]
-      default: [],
-    },
-
     // add air ticket company name
     airlines: {
       type: [String],
       default: [], // eg: ["Delta", "American Airlines"]
     },
+    
     isActive: {
       type: Boolean,
       default: true,

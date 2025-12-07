@@ -11,8 +11,7 @@ export const createService = async (req, res) => {
       description,
       requiredDocuments,
       estimatedProcessingDays,
-      formFields,
-      countries,
+      subServices,
       airlines,
     } = req.body;
 
@@ -52,22 +51,28 @@ export const createService = async (req, res) => {
       });
     }
 
-    // Validate formFields
-    if (formFields && !Array.isArray(formFields)) {
+      if (airlines && !Array.isArray(airlines)) {
       return res.status(400).json({
         success: false,
-        message: "formFields must be an array",
+        message: "airlines must be an array of strings",
+      });
+    }
+
+      // Validate subServices
+    if (subServices && !Array.isArray(subServices)) {
+      return res.status(400).json({
+        success: false,
+        message: "subServices must be an array",
       });
     }
 
     const newService = new Service({
       name: name.trim(),
+      imageURL: imageURL || "",
       description,
       requiredDocuments: requiredDocuments || [],
       estimatedProcessingDays: estimatedProcessingDays || 0,
-      formFields: formFields || [],
-      imageURL: imageURL || "",
-      countries: countries || [],
+      subServices: subServices || [],
       airlines: airlines || [],
     });
 
@@ -86,6 +91,7 @@ export const createService = async (req, res) => {
       data: savedService,
     });
   } catch (error) {
+    console.log("Create Service Error:", error);
     return res.status(500).json({
       success: false,
       message: "Server Error",
@@ -99,6 +105,7 @@ export const getAllServices = async (req, res) => {
   try {
     const services = await Service.find().sort({ createdAt: -1 });
     res.status(200).json({ success: true, data: services });
+    console.log(services);
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
@@ -189,5 +196,93 @@ export const toggleServiceStatus = async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+
+
+export const deleteSubService = async (req, res) => {
+  try {
+    const { serviceId, subServiceId } = req.params;
+
+    // Find parent service
+    const service = await Service.findById(serviceId);
+    if (!service) {
+      return res.status(404).json({
+        success: false,
+        message: "Service not found",
+      });
+    }
+
+    // Check if sub-service exists
+    const subService = service.subServices.id(subServiceId);
+    if (!subService) {
+      return res.status(404).json({
+        success: false,
+        message: "Sub-service not found",
+      });
+    }
+
+    // Remove the sub-service
+    subService.deleteOne();
+
+    // Save the service
+    await service.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "Sub-service deleted successfully",
+      data: service,
+    });
+
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Server Error",
+      error: error.message,
+    });
+  }
+};
+
+export const toggleSubService = async (req, res) => {
+  try {
+    const { serviceId, subServiceId } = req.params;
+
+    // Find parent service
+    const service = await Service.findById(serviceId);
+    if (!service) {
+      return res.status(404).json({
+        success: false,
+        message: "Service not found",
+      });
+    }
+
+    // Find sub-service inside array
+    const subService = service.subServices.id(subServiceId);
+    if (!subService) {
+      return res.status(404).json({
+        success: false,
+        message: "Sub-service not found",
+      });
+    }
+
+    // Toggle status
+    subService.isActive = !subService.isActive;
+
+    // Save service
+    await service.save();
+
+    return res.status(200).json({
+      success: true,
+      message: `Sub-service ${subService.isActive ? "activated" : "deactivated"}`,
+      data: service,
+    });
+
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Server Error",
+      error: error.message,
+    });
   }
 };
