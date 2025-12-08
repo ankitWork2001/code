@@ -14,7 +14,7 @@ const RequestSchema = new mongoose.Schema(
       type: mongoose.Types.ObjectId,
       required: true,
     },
-
+    subServiceName: { type: String, required: true },
     // dynamic form fields saved here (passport number, dates...), keep flexible
     formData: { type: mongoose.Schema.Types.Mixed, default: {} },
 

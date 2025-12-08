@@ -9,7 +9,7 @@ import { createNotification } from "../utils/createNotification.js";
 export const createRequest = async (req, res) => {
   try {
     const userId = req.userId; // from auth middleware
-    const { serviceId, subServiceId, formData, documents } = req.body;
+    const { serviceId, subServiceId, subServiceName, formData, documents } = req.body;
     console.log("Create Request Body:", req.body);
 
     // const existingRequest = await Request.findOne({
@@ -47,6 +47,7 @@ if (!subService) {
       user: userId,
       service: serviceId,
       subService: subServiceId,
+      subServiceName: subService.name,
       formData: formData || {},
       documents: documents || [],
     });

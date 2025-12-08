@@ -16,7 +16,7 @@ const subServiceSchema = new mongoose.Schema({
         name: { type: String, required: true }, // key in formData
         type: {
           type: String,
-          enum: ["text", "number", "date", "select", "file"],
+          enum: ["text", "number", "date", "select", "file", "phone"],
           required: true,
         },
         required: { type: Boolean, default: false },
