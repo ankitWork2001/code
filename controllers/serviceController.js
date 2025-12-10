@@ -103,7 +103,7 @@ export const createService = async (req, res) => {
 // Get all active services
 export const getAllServices = async (req, res) => {
   try {
-    const services = await Service.find().sort({ createdAt: -1 });
+    const services = await Service.find().sort({ updatedAt: -1 });
     res.status(200).json({ success: true, data: services });
     console.log(services);
   } catch (error) {
