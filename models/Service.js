@@ -52,13 +52,13 @@ const serviceSchema = new mongoose.Schema(
       type: [subServiceSchema],
       default: [],
     },
+    subServicesUIType: {
+      type: String,
+      enum: ["card", "dropdown"],
+      default: "card",
+    },
     // List of document names the user needs to upload
     requiredDocuments: {
-      type: [String],
-      default: [],
-    },
-    // Informational field for the user
-    estimatedProcessingSteps: {
       type: [String],
       default: [],
     },
@@ -71,7 +71,6 @@ const serviceSchema = new mongoose.Schema(
       type: [String],
       default: [], // eg: ["Delta", "American Airlines"]
     },
-    
     isActive: {
       type: Boolean,
       default: true,

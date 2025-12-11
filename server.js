@@ -8,6 +8,7 @@ import './utils/cron.js';
 import authRoutes from "./routes/authRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import serviceRoutes from "./routes/serviceRoutes.js";
+import airBookingRoutes from "./routes/airBookingRoutes.js";
 import requestRoutes from "./routes//requestRoutes.js";
 import notificationRoutes from "./routes/notificationRoutes.js";
 
@@ -37,6 +38,7 @@ app.get("/", (req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/services", serviceRoutes);
+app.use("/api/air-bookings", airBookingRoutes);
 app.use("/api/requests", requestRoutes);
 app.use("/api/notifications", notificationRoutes);
 

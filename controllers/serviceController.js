@@ -3,6 +3,7 @@ import { createNotification } from "../utils/createNotification.js";
 
 // Create a new service
 export const createService = async (req, res) => {
+  console.log("Create Service Payload:", req.body);
   try {
     const userId = req.userId; // from auth middleware
     const {
@@ -12,6 +13,7 @@ export const createService = async (req, res) => {
       requiredDocuments,
       estimatedProcessingDays,
       subServices,
+      subServicesUIType,
       airlines,
     } = req.body;
 
@@ -73,6 +75,7 @@ export const createService = async (req, res) => {
       requiredDocuments: requiredDocuments || [],
       estimatedProcessingDays: estimatedProcessingDays || 0,
       subServices: subServices || [],
+      subServicesUIType: subServicesUIType || "card",
       airlines: airlines || [],
     });
 
@@ -128,6 +131,7 @@ export const getServiceById = async (req, res) => {
 
 // Update service by ID
 export const updateService = async (req, res) => {
+  console.log("Update Service Payload:", req.body);
   try {
     const updatedService = await Service.findByIdAndUpdate(
       req.params.id,
