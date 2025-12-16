@@ -8,7 +8,7 @@ const DocumentSchema = new mongoose.Schema(
     },
     mimeType: {
       type: String, // e.g., "application/pdf", "image/jpeg"
-      required: true,
+      // required: true,
     },
     url: {
       type: String,
@@ -17,12 +17,12 @@ const DocumentSchema = new mongoose.Schema(
     provider: {
       type: String,
       enum: ["cloudinary", "s3"],
-      default: "cloudinary",
+      // default: "cloudinary",
     },
 
     publicId: {
       type: String,
-      required: true,
+      // required: true,
     },
 
     uploadedAt: {

@@ -1,5 +1,5 @@
 import AirBooking from "../models/AirBooking.js";
-
+import { airports } from "../data/airports.js";
 // ------------------------- CREATE AirBooking -------------------------
 // Validate passenger fields
 const validateAdultPassengers = (passengers) => {
@@ -25,9 +25,8 @@ const validateAdultPassengers = (passengers) => {
 
 
 export const bookAirTicket = async (req, res) => {
-  console.log("AirBooking Request Body:", req.body);
   try {
-    const { userId } = req.user;
+    const userId = req.user._id;
     const { fromCity, toCity, departureDate, travelClass, passengers } = req.body;
 
     const passengerError = validateAdultPassengers(passengers);
@@ -59,7 +58,6 @@ export const bookAirTicket = async (req, res) => {
   }
 };
 
-
 // ------------------------- GET ALL AirBookingS -------------------------
 export const getAllAirBookings = async (req, res) => {
   try {
@@ -84,10 +82,8 @@ export const getAirBookingById = async (req, res) => {
 };
 
 export const getMyBookings = async (req, res) => {
-  console.log("Get My Bookings Request by User:", req.user);
   try {
-    const { userId } = req.user; // Assuming user ID is available in req.user
-
+    const userId = req.user._id;
     const bookings = await AirBooking.find({ userId }).sort({ createdAt: -1 });
     console.log("Fetched My Bookings:", bookings);
     res.status(200).json({ success: true, data: bookings });
@@ -96,3 +92,43 @@ export const getMyBookings = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
+export const changeStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+    const validStatuses = ["Pending", "Booked", "Cancelled"];
+
+    if (!validStatuses.includes(status)) {
+      return res.status(400).json({ success: false, message: "Invalid status value" });
+    }
+    const updatedBooking = await AirBooking.findByIdAndUpdate(
+      id,
+      { status },
+      { new: true }
+    );
+    if (!updatedBooking) {
+      return res.status(404).json({ success: false, message: "Booking not found" });
+    }
+    res.status(200).json({ success: true, message: "Status updated successfully", data: updatedBooking });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+
+export const getAirports = async (req, res) => {
+  try {
+    res.status(200).json({
+      success: true,
+      count: airports.length,
+      data: airports,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch airports",
+    });
+  }
+};
+

@@ -29,7 +29,7 @@ const airBookingSchema = new mongoose.Schema(
       default: "OneWay"
     },
     travelClass: { type: String, enum: ["Economy", "Premium Economy", "Business", "First"], default: "Economy" },
-
+    status: { type: String, enum: ["Pending", "Booked", "Cancelled", "Completed"], default: "Pending" },
     passengers: {
       Adult: { type: [passengerSchema], default: [] },
       Child: { type: [passengerSchema], default: [] },
