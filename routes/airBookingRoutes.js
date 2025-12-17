@@ -12,6 +12,5 @@ router.get("/my-bookings", authenticate, getMyBookings);
 
 router.put("/change-status/:id", authenticate, changeStatus);
 
-
 router.get("/airports", getAirports);
 export default router;
