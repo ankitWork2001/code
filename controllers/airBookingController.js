@@ -27,7 +27,15 @@ const validateAdultPassengers = (passengers) => {
 export const bookAirTicket = async (req, res) => {
   try {
     const userId = req.user._id;
-    const { fromCity, toCity, departureDate, travelClass, passengers } = req.body;
+    const { fromCity, toCity, departureDate, travelClass, travelType, returnDate, passengers } = req.body;
+
+    if(!fromCity || !toCity || !departureDate || !travelClass || !travelType){
+      return res.status(400).json({ success: false, message: "All fields are required" });
+    }
+
+    if(travelType === "RoundTrip" && !returnDate){
+      return res.status(400).json({ success: false, message: "Return date is required for round-trip bookings" });
+    }
 
     const passengerError = validateAdultPassengers(passengers);
     if (passengerError) {
@@ -40,7 +48,9 @@ export const bookAirTicket = async (req, res) => {
       toCity,
       departureDate,
       travelClass,
-      passengers
+      passengers,
+      travelType,
+      returnDate
     });
 
     res.status(201).json({
@@ -115,7 +125,6 @@ export const changeStatus = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
-
 
 export const getAirports = async (req, res) => {
   try {
