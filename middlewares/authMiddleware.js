@@ -45,7 +45,7 @@ export const isAdmin = async (req, res, next) => {
       return res.status(401).json({ error: "Authentication required" });
     }
 
-    if (req.user.role !== "admin") {
+    if (req.user.role !== "admin" && req.user.role !== "superadmin") {
       return res.status(403).json({
         error: "Forbidden - Admin access required",
         message: "User not authorized to access this resource",

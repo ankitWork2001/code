@@ -1,4 +1,3 @@
-// middlewares/upload.js
 import multer from "multer";
 import fs from "fs";
 
@@ -16,4 +15,4 @@ const storage = multer.diskStorage({
   },
 });
 
-export default multer({ storage });
+export const upload = multer({ storage });
