@@ -6,6 +6,12 @@ import { createNotification } from "../utils/createNotification.js";
 // --------------------------------------------------
 // CREATE NEW REQUEST
 // --------------------------------------------------
+
+const SPECIAL_SERVICES_IDS = [
+  "694d432660f4c07b01a26022",
+  "694e1d5160f4c07b01a262ca",
+];
+
 export const createRequest = async (req, res) => {
   try {
     const userId = req.userId; // from auth middleware
@@ -63,11 +69,23 @@ if (!subService) {
 
         console.log("Created Request:", request);
 
+   if (SPECIAL_SERVICES_IDS.includes(serviceId)) {
+  return res.status(201).json({
+    success: true,
+    message: `Request created succefully.`,
+    action: "SEND_DOCUMENTS_EXTERNALLY",
+    address: process.env.MY_ADDRESS,
+    data: request,
+  });
+}
+
+    // ✅ Normal response for other services
     return res.status(201).json({
       success: true,
       message: "Request created successfully",
       data: request,
     });
+
   } catch (error) {
     console.log("Create Request Error:", error);
     res.status(500).json({ success: false, message: "Server error" });

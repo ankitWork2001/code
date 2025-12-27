@@ -265,3 +265,14 @@ export const resetPassword = async (req, res, next) => {
     next(err);
   }
 };
+
+export const getDeliveryAddress = (req, res) => {
+  try {
+    const address = process.env.MY_ADDRESS || "Address not set";
+    res.json({ success: true, address });
+  } catch (err) {
+    res
+      .status(500)
+      .json({ success: false, message: "Server Error", error: err.message });
+  }
+};
